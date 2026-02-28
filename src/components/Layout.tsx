@@ -16,10 +16,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-md">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <Pill className="h-5 w-5 text-primary-foreground" />
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+              <Plus className="h-5 w-5 text-primary-foreground" strokeWidth={3} />
+              <Heart className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 text-accent fill-accent" />
             </div>
-            <span className="text-lg font-bold text-foreground">PharmaILPI</span>
+            <span className="text-lg font-bold text-foreground">SeniorCare Farma</span>
           </Link>
           <nav className="flex items-center gap-1">
             {navItems.map((item) => {

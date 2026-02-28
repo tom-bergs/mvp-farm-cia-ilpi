@@ -40,9 +40,9 @@ export default function Index() {
         {/* Hero */}
         <section className="text-center space-y-4 pt-8">
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Farmácia especializada em{" "}
-            <span className="text-primary">ILPIs</span>
+            <span className="text-primary">SeniorCare</span> Farma
           </h1>
+          <p className="text-lg font-medium text-muted-foreground">Farmácia especializada em ILPIs</p>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Gestão simplificada de medicamentos para instituições de longa permanência. 
             Conectamos profissionais de saúde, famílias e administração em uma única plataforma.

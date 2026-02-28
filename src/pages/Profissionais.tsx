@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Trash2, AlertTriangle, FileText, Pill } from "lucide-react";
+import { Plus, Trash2, AlertTriangle, FileText, Pill, Upload, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Profissionais() {
   const [selectedResident, setSelectedResident] = useState(residents[0].id);
   const [items, setItems] = useState<PrescriptionItem[]>(initialItems);
   const [newMedId, setNewMedId] = useState("");
+  const [uploadedPrescriptions, setUploadedPrescriptions] = useState<Record<string, boolean>>({});
 
   const residentItems = items.filter((i) => i.residentId === selectedResident);
   const resident = residents.find((r) => r.id === selectedResident)!;
@@ -41,10 +42,11 @@ export default function Profissionais() {
     toast.success("Medicamento adicionado");
   };
 
-  const totalValue = residentItems.reduce((sum, item) => {
-    const med = medications.find((m) => m.id === item.medicationId);
-    return sum + (med ? med.unitPrice * item.quantity : 0);
-  }, 0);
+  const handleUploadPrescription = (itemId: string) => {
+    // Simula upload de receita digital
+    setUploadedPrescriptions((prev) => ({ ...prev, [itemId]: true }));
+    toast.success("Receita digital enviada com sucesso!");
+  };
 
   return (
     <Layout>
@@ -85,7 +87,7 @@ export default function Profissionais() {
             <SelectContent>
               {medications.map((m) => (
                 <SelectItem key={m.id} value={m.id}>
-                  {m.name} — R$ {m.unitPrice.toFixed(2)}
+                  {m.name} — {m.dosage}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -103,7 +105,7 @@ export default function Profissionais() {
                 <TableHead>Medicamento</TableHead>
                 <TableHead className="text-center">Flags</TableHead>
                 <TableHead className="text-center w-32">Qtd</TableHead>
-                <TableHead className="text-right">Subtotal</TableHead>
+                <TableHead className="text-center">Upload de Prescrição</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -118,6 +120,7 @@ export default function Profissionais() {
               ) : (
                 residentItems.map((item) => {
                   const med = medications.find((m) => m.id === item.medicationId)!;
+                  const hasUploaded = uploadedPrescriptions[item.id];
                   return (
                     <TableRow key={item.id}>
                       <TableCell>
@@ -147,8 +150,24 @@ export default function Profissionais() {
                           className="text-center w-20 mx-auto"
                         />
                       </TableCell>
-                      <TableCell className="text-right font-medium">
-                        R$ {(med.unitPrice * item.quantity).toFixed(2)}
+                      <TableCell className="text-center">
+                        {med.requiresPrescription ? (
+                          hasUploaded ? (
+                            <Badge className="bg-success text-success-foreground">
+                              <CheckCircle2 className="mr-1 h-3 w-3" /> Enviada
+                            </Badge>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleUploadPrescription(item.id)}
+                            >
+                              <Upload className="mr-1 h-3.5 w-3.5" /> Enviar Receita
+                            </Button>
+                          )
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Não necessário</span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <Button variant="ghost" size="icon" onClick={() => removeItem(item.id)} className="text-destructive hover:text-destructive">
@@ -162,11 +181,8 @@ export default function Profissionais() {
             </TableBody>
           </Table>
           {residentItems.length > 0 && (
-            <div className="flex items-center justify-between border-t border-border bg-secondary/30 px-6 py-4">
+            <div className="flex items-center justify-end border-t border-border bg-secondary/30 px-6 py-4">
               <span className="text-sm text-muted-foreground">{residentItems.length} medicamento(s)</span>
-              <span className="text-lg font-bold text-foreground">
-                Total: R$ {totalValue.toFixed(2)}
-              </span>
             </div>
           )}
         </div>
