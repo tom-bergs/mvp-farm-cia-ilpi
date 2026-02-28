@@ -1,21 +1,30 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
-import { residents, medications, prescriptionItems, familyMembers } from "@/data/mockData";
+import { residents, medications, prescriptionItems, familyMembers as initialMembers, type FamilyMember } from "@/data/mockData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CreditCard, QrCode, CheckCircle2, FileText, AlertTriangle, Users } from "lucide-react";
+import { CreditCard, QrCode, CheckCircle2, Users, UserPlus, Trash2, Crown } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Familia() {
   const [selectedResident, setSelectedResident] = useState(residents[0].id);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
+  const [newMemberName, setNewMemberName] = useState("");
+  const [newMemberEmail, setNewMemberEmail] = useState("");
+  const [newMemberPercent, setNewMemberPercent] = useState("");
+  const [editingPercent, setEditingPercent] = useState<Record<string, string>>({});
 
   const resident = residents.find((r) => r.id === selectedResident)!;
   const residentItems = prescriptionItems.filter((i) => i.residentId === selectedResident);
-  const members = familyMembers.filter((f) => f.residentId === selectedResident);
+  const residentMembers = members.filter((f) => f.residentId === selectedResident);
+
+  // First member is admin
+  const adminMember = residentMembers[0];
 
   const totalValue = residentItems.reduce((sum, item) => {
     const med = medications.find((m) => m.id === item.medicationId);
@@ -25,6 +34,51 @@ export default function Familia() {
   const handlePayment = () => {
     toast.success(`Pagamento via ${paymentMethod === "pix" ? "Pix" : "Cartão"} processado!`);
     setPaymentMethod(null);
+  };
+
+  const addMember = () => {
+    if (!newMemberName.trim() || !newMemberEmail.trim()) {
+      toast.error("Preencha nome e e-mail");
+      return;
+    }
+    const percent = Number(newMemberPercent) || 0;
+    const fm: FamilyMember = {
+      id: `f${Date.now()}`,
+      residentId: selectedResident,
+      name: newMemberName,
+      email: newMemberEmail,
+      sharePercent: percent,
+    };
+    setMembers((prev) => [...prev, fm]);
+    setNewMemberName("");
+    setNewMemberEmail("");
+    setNewMemberPercent("");
+    toast.success("Membro adicionado");
+  };
+
+  const removeMember = (id: string) => {
+    if (adminMember && id === adminMember.id) {
+      toast.error("Não é possível remover o administrador");
+      return;
+    }
+    setMembers((prev) => prev.filter((m) => m.id !== id));
+    toast.success("Membro removido");
+  };
+
+  const updatePercent = (id: string, value: string) => {
+    setEditingPercent((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const commitPercent = (id: string) => {
+    const val = Number(editingPercent[id]);
+    if (!isNaN(val) && val >= 0 && val <= 100) {
+      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, sharePercent: val } : m)));
+    }
+    setEditingPercent((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
 
   return (
@@ -64,7 +118,6 @@ export default function Familia() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Produto</TableHead>
-                    <TableHead className="text-center">Flags</TableHead>
                     <TableHead className="text-center">Qtd</TableHead>
                     <TableHead className="text-right">Valor</TableHead>
                   </TableRow>
@@ -76,20 +129,6 @@ export default function Familia() {
                       <TableRow key={item.id}>
                         <TableCell>
                           <p className="font-medium text-foreground">{med.name}</p>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="flex justify-center gap-1 flex-wrap">
-                            {med.requiresPrescription && (
-                              <Badge variant="secondary" className="text-xs">
-                                <FileText className="mr-1 h-3 w-3" /> Prescrição
-                              </Badge>
-                            )}
-                            {med.controlledSubstance && (
-                              <Badge variant="destructive" className="text-xs">
-                                <AlertTriangle className="mr-1 h-3 w-3" /> Controlado
-                              </Badge>
-                            )}
-                          </div>
                         </TableCell>
                         <TableCell className="text-center">{item.quantity}</TableCell>
                         <TableCell className="text-right font-medium">
@@ -107,30 +146,78 @@ export default function Familia() {
             </div>
           </div>
 
-          {/* Sidebar: payment + family split */}
+          {/* Sidebar: family members + payment */}
           <div className="space-y-4">
             {/* Family members */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Users className="h-4 w-4 text-primary" /> Responsáveis Financeiros
+                  <Users className="h-4 w-4 text-primary" /> Membros da Família
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {members.map((m) => (
-                  <div key={m.id} className="flex items-center justify-between rounded-lg bg-secondary/50 p-3">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{m.name}</p>
-                      <p className="text-xs text-muted-foreground">{m.email}</p>
+                {residentMembers.map((m, index) => {
+                  const isAdmin = index === 0;
+                  const isEditing = editingPercent[m.id] !== undefined;
+                  return (
+                    <div key={m.id} className="flex items-center justify-between rounded-lg bg-secondary/50 p-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-medium text-foreground truncate">{m.name}</p>
+                          {isAdmin && (
+                            <Crown className="h-3.5 w-3.5 text-accent shrink-0" />
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">{m.email}</p>
+                      </div>
+                      <div className="flex items-center gap-2 ml-2 shrink-0">
+                        <div className="flex items-center gap-1">
+                          {isEditing ? (
+                            <Input
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={editingPercent[m.id]}
+                              onChange={(e) => updatePercent(m.id, e.target.value)}
+                              onBlur={() => commitPercent(m.id)}
+                              onKeyDown={(e) => e.key === "Enter" && commitPercent(m.id)}
+                              className="w-16 h-7 text-center text-xs"
+                              autoFocus
+                            />
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className="cursor-pointer hover:bg-secondary"
+                              onClick={() => setEditingPercent((prev) => ({ ...prev, [m.id]: String(m.sharePercent) }))}
+                            >
+                              {m.sharePercent}%
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm font-bold text-foreground whitespace-nowrap">
+                          R$ {((totalValue * m.sharePercent) / 100).toFixed(2)}
+                        </p>
+                        {!isAdmin && (
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => removeMember(m.id)}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <Badge variant="outline">{m.sharePercent}%</Badge>
-                      <p className="text-sm font-bold text-foreground mt-1">
-                        R$ {((totalValue * m.sharePercent) / 100).toFixed(2)}
-                      </p>
-                    </div>
+                  );
+                })}
+
+                {/* Add member form */}
+                <div className="space-y-2 border-t border-border pt-3">
+                  <Input placeholder="Nome" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="h-8 text-sm" />
+                  <div className="flex gap-1.5">
+                    <Input placeholder="E-mail" value={newMemberEmail} onChange={(e) => setNewMemberEmail(e.target.value)} className="h-8 text-sm flex-1" />
+                    <Input placeholder="%" type="number" value={newMemberPercent} onChange={(e) => setNewMemberPercent(e.target.value)} className="h-8 text-sm w-16" />
+                    <Button size="icon" className="h-8 w-8 shrink-0" onClick={addMember}>
+                      <UserPlus className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
-                ))}
+                </div>
               </CardContent>
             </Card>
 
