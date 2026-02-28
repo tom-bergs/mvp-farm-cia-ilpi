@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Stethoscope, Users, Settings, Pill, Home } from "lucide-react";
+import { Stethoscope, Users, Settings, Home, Heart, Plus } from "lucide-react";
 
 const navItems = [
   { path: "/", label: "Início", icon: Home },
