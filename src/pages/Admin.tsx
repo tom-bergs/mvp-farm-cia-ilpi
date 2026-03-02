@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
-import { residents as initialResidents, familyMembers as initialMembers, type Resident, type FamilyMember } from "@/data/mockData";
+import { residents as initialResidents, familyMembers as initialMembers, healthProfessionals as initialProfessionals, type Resident, type FamilyMember, type HealthProfessional } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

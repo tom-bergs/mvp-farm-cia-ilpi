@@ -67,3 +67,18 @@ export const familyMembers: FamilyMember[] = [
   { id: "f4", residentId: "r3", name: "Fernanda Oliveira", email: "sobrinha.ana@email.com", sharePercent: 100 },
   { id: "f5", residentId: "r4", name: "Roberto Pereira", email: "filho.carlos@email.com", sharePercent: 100 },
 ];
+
+export interface HealthProfessional {
+  id: string;
+  residentId: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export const healthProfessionals: HealthProfessional[] = [
+  { id: "hp1", residentId: "r1", name: "Dr. Ricardo Lima", email: "dr.ricardo@email.com", role: "Médico" },
+  { id: "hp2", residentId: "r2", name: "Enf. Patrícia Souza", email: "patricia.enf@email.com", role: "Enfermeira" },
+  { id: "hp3", residentId: "r3", name: "Dr. Ricardo Lima", email: "dr.ricardo@email.com", role: "Médico" },
+  { id: "hp4", residentId: "r4", name: "Dr. Marcos Alves", email: "dr.marcos@email.com", role: "Médico" },
+];
