@@ -132,67 +132,131 @@ export default function Admin() {
             </CardContent>
           </Card>
 
-          {/* Family contacts */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Mail className="h-5 w-5 text-primary" /> Contatos Familiares
-                {selectedResident && (
-                  <Badge className="ml-2">
-                    {residents.find((r) => r.id === selectedResident)?.name}
-                  </Badge>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {selectedResident ? (
-                <>
-                  <div className="space-y-2">
-                    <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} />
-                    <div className="flex gap-2">
-                      <Input placeholder="E-mail" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="flex-1" />
-                      <Input placeholder="%" value={newMemberPercent} onChange={(e) => setNewMemberPercent(e.target.value)} className="w-20" type="number" />
-                      <Button onClick={addFamilyMember} size="icon">
-                        <UserPlus className="h-4 w-4" />
-                      </Button>
+          <div className="space-y-6">
+            {/* Family contacts */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-primary" /> Contatos Familiares
+                  {selectedResident && (
+                    <Badge className="ml-2">
+                      {residents.find((r) => r.id === selectedResident)?.name}
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedResident ? (
+                  <>
+                    <div className="space-y-2">
+                      <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} />
+                      <div className="flex gap-2">
+                        <Input placeholder="E-mail" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="flex-1" />
+                        <Input placeholder="%" value={newMemberPercent} onChange={(e) => setNewMemberPercent(e.target.value)} className="w-20" type="number" />
+                        <Button onClick={addFamilyMember} size="icon">
+                          <UserPlus className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Nome</TableHead>
-                        <TableHead>E-mail</TableHead>
-                        <TableHead className="text-center">%</TableHead>
-                        <TableHead className="w-10"></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {members
-                        .filter((m) => m.residentId === selectedResident)
-                        .map((m) => (
-                          <TableRow key={m.id}>
-                            <TableCell className="font-medium">{m.name}</TableCell>
-                            <TableCell className="text-muted-foreground">{m.email}</TableCell>
-                            <TableCell className="text-center">
-                              <Badge variant="outline">{m.sharePercent}%</Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </>
-              ) : (
-                <p className="text-center text-muted-foreground py-8">
-                  Selecione um residente para gerenciar contatos
-                </p>
-              )}
-            </CardContent>
-          </Card>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Nome</TableHead>
+                          <TableHead>E-mail</TableHead>
+                          <TableHead className="text-center">%</TableHead>
+                          <TableHead className="w-10"></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {members
+                          .filter((m) => m.residentId === selectedResident)
+                          .map((m) => (
+                            <TableRow key={m.id}>
+                              <TableCell className="font-medium">{m.name}</TableCell>
+                              <TableCell className="text-muted-foreground">{m.email}</TableCell>
+                              <TableCell className="text-center">
+                                <Badge variant="outline">{m.sharePercent}%</Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </>
+                ) : (
+                  <p className="text-center text-muted-foreground py-8">
+                    Selecione um residente para gerenciar contatos
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Health professionals */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Stethoscope className="h-5 w-5 text-primary" /> Profissionais de Saúde
+                  {selectedResident && (
+                    <Badge className="ml-2">
+                      {residents.find((r) => r.id === selectedResident)?.name}
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedResident ? (
+                  <>
+                    <div className="space-y-2">
+                      <Input placeholder="Nome do profissional" value={newProfName} onChange={(e) => setNewProfName(e.target.value)} />
+                      <div className="flex gap-2">
+                        <Input placeholder="E-mail" value={newProfEmail} onChange={(e) => setNewProfEmail(e.target.value)} className="flex-1" />
+                        <Input placeholder="Função" value={newProfRole} onChange={(e) => setNewProfRole(e.target.value)} className="w-32" />
+                        <Button onClick={addProfessional} size="icon">
+                          <UserPlus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Nome</TableHead>
+                          <TableHead>E-mail</TableHead>
+                          <TableHead className="text-center">Função</TableHead>
+                          <TableHead className="w-10"></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {professionals
+                          .filter((p) => p.residentId === selectedResident)
+                          .map((p) => (
+                            <TableRow key={p.id}>
+                              <TableCell className="font-medium">{p.name}</TableCell>
+                              <TableCell className="text-muted-foreground">{p.email}</TableCell>
+                              <TableCell className="text-center">
+                                <Badge variant="outline">{p.role}</Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Button variant="ghost" size="icon" onClick={() => removeProfessional(p.id)} className="text-destructive hover:text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </>
+                ) : (
+                  <p className="text-center text-muted-foreground py-8">
+                    Selecione um residente para gerenciar profissionais
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </Layout>
