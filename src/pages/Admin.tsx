@@ -60,6 +60,30 @@ export default function Admin() {
     toast.success("Membro removido");
   };
 
+  const addProfessional = () => {
+    if (!selectedResident || !newProfEmail.trim() || !newProfName.trim() || !newProfRole.trim()) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+    const hp: HealthProfessional = {
+      id: `hp${Date.now()}`,
+      residentId: selectedResident,
+      name: newProfName,
+      email: newProfEmail,
+      role: newProfRole,
+    };
+    setProfessionals((prev) => [...prev, hp]);
+    setNewProfName("");
+    setNewProfEmail("");
+    setNewProfRole("");
+    toast.success("Profissional adicionado");
+  };
+
+  const removeProfessional = (id: string) => {
+    setProfessionals((prev) => prev.filter((p) => p.id !== id));
+    toast.success("Profissional removido");
+  };
+
   return (
     <Layout>
       <div className="mx-auto max-w-5xl space-y-6">
