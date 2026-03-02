@@ -12,11 +12,15 @@ import { toast } from "sonner";
 export default function Admin() {
   const [residents, setResidents] = useState<Resident[]>(initialResidents);
   const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
+  const [professionals, setProfessionals] = useState<HealthProfessional[]>(initialProfessionals);
   const [newName, setNewName] = useState("");
   const [newRoom, setNewRoom] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberPercent, setNewMemberPercent] = useState("");
+  const [newProfName, setNewProfName] = useState("");
+  const [newProfEmail, setNewProfEmail] = useState("");
+  const [newProfRole, setNewProfRole] = useState("");
   const [selectedResident, setSelectedResident] = useState<string | null>(null);
 
   const addResident = () => {
