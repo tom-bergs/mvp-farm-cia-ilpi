@@ -53,6 +53,10 @@ export default function Familia() {
       return;
     }
     const percent = Number(newMemberPercent) || 0;
+    if (totalPercent + percent > 100) {
+      toast.error("A soma dos percentuais não pode ultrapassar 100%");
+      return;
+    }
     const fm: FamilyMember = {
       id: `f${Date.now()}`,
       residentId: selectedResident,
