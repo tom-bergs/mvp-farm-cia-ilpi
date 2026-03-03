@@ -17,6 +17,7 @@ export default function Admin() {
   const [newRoom, setNewRoom] = useState("");
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
+  const [newMemberRelation, setNewMemberRelation] = useState("");
   const [newProfName, setNewProfName] = useState("");
   const [newProfEmail, setNewProfEmail] = useState("");
   const [newProfRole, setNewProfRole] = useState("");
