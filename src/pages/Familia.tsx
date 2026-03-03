@@ -230,6 +230,23 @@ export default function Familia() {
                   );
                 })}
 
+                {/* Total percent */}
+                <div className="flex items-center justify-between border-t border-border pt-3 px-1">
+                  <span className="text-sm font-medium text-muted-foreground">Total alocado:</span>
+                  <Badge
+                    variant="outline"
+                    className={totalPercent > 100 ? "border-destructive text-destructive" : totalPercent === 100 ? "border-green-600 text-green-600" : ""}
+                  >
+                    {totalPercent}%
+                  </Badge>
+                </div>
+                {totalPercent > 100 && (
+                  <div className="flex items-center gap-2 rounded-md bg-destructive/10 border border-destructive/30 px-3 py-2 text-destructive">
+                    <AlertTriangle className="h-4 w-4 shrink-0" />
+                    <span className="text-xs font-medium">A soma dos percentuais ultrapassa 100%</span>
+                  </div>
+                )}
+
                 {/* Add member form */}
                 <div className="space-y-2 border-t border-border pt-3">
                   <Input placeholder="Nome" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="h-8 text-sm" />
