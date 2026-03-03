@@ -13,6 +13,7 @@ import { toast } from "sonner";
 export default function Familia() {
   const [selectedResident, setSelectedResident] = useState(residents[0].id);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [paid, setPaid] = useState(false);
   const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
