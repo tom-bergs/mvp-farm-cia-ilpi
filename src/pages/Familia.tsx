@@ -93,7 +93,7 @@ export default function Familia() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-5xl space-y-6">
+      <div className="mx-auto max-w-5xl space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Área da Família</h1>
           <p className="text-muted-foreground">Visualize medicamentos e realize pagamentos</p>
