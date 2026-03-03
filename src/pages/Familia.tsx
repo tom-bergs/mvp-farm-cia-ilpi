@@ -42,6 +42,7 @@ export default function Familia() {
   const handlePayment = () => {
     toast.success(`Pagamento via ${paymentMethod === "pix" ? "Pix" : "Cartão"} processado!`);
     setPaymentMethod(null);
+    setPaid(true);
   };
 
   const addMember = () => {
