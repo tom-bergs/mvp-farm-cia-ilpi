@@ -94,30 +94,14 @@ export default function Familia() {
   return (
     <Layout>
       <div className="mx-auto max-w-5xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Área da Família</h1>
-          <p className="text-muted-foreground">Visualize medicamentos e realize pagamentos</p>
-        </div>
-
-        {/* Header row: resident selector + step-by-step */}
+        {/* Title + step-by-step aligned */}
         <div className="flex flex-col lg:flex-row items-start lg:items-stretch gap-4">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium">Residente:</span>
-            <Select value={selectedResident} onValueChange={setSelectedResident}>
-              <SelectTrigger className="w-64">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {residents.map((r) => (
-                  <SelectItem key={r.id} value={r.id}>
-                    {r.name} — Quarto {r.room}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Área da Família</h1>
+            <p className="text-muted-foreground">Visualize medicamentos e realize pagamentos</p>
           </div>
 
-          <Card className="flex-1 lg:ml-auto lg:max-w-sm w-full">
+          <Card className="lg:ml-auto lg:max-w-sm w-full">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base">
                 <CalendarClock className="h-4 w-4 text-primary" /> Passo-a-passo do Pedido
@@ -153,6 +137,23 @@ export default function Familia() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Resident selector */}
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium">Residente:</span>
+          <Select value={selectedResident} onValueChange={setSelectedResident}>
+            <SelectTrigger className="w-64">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {residents.map((r) => (
+                <SelectItem key={r.id} value={r.id}>
+                  {r.name} — Quarto {r.room}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
