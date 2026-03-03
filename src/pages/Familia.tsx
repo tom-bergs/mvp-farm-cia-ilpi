@@ -27,6 +27,8 @@ export default function Familia() {
   // First member is admin
   const adminMember = residentMembers[0];
 
+  const totalPercent = residentMembers.reduce((sum, m) => sum + m.sharePercent, 0);
+
   const totalValue = residentItems.reduce((sum, item) => {
     const med = medications.find((m) => m.id === item.medicationId);
     return sum + (med ? med.unitPrice * item.quantity : 0);
