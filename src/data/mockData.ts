@@ -27,7 +27,9 @@ export interface FamilyMember {
   residentId: string;
   name: string;
   email: string;
+  relation: string;
   sharePercent: number;
+  isAdmin?: boolean;
 }
 
 export const residents: Resident[] = [
