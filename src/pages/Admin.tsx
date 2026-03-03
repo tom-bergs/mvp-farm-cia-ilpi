@@ -215,7 +215,10 @@ export default function Admin() {
                 {selectedResident ? (
                   <>
                     <div className="space-y-2">
-                      <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} />
+                      <div className="flex gap-2">
+                        <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="flex-1" />
+                        <Input placeholder="Relação" value={newMemberRelation} onChange={(e) => setNewMemberRelation(e.target.value)} className="w-28" />
+                      </div>
                       <div className="flex gap-2">
                         <Input placeholder="E-mail" value={newMemberEmail} onChange={(e) => setNewMemberEmail(e.target.value)} className="flex-1" />
                         <Button onClick={addFamilyMember} size="icon">
@@ -226,7 +229,9 @@ export default function Admin() {
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead></TableHead>
                           <TableHead>Nome</TableHead>
+                          <TableHead>Relação</TableHead>
                           <TableHead>E-mail</TableHead>
                           <TableHead className="w-10"></TableHead>
                         </TableRow>
@@ -234,21 +239,24 @@ export default function Admin() {
                       <TableBody>
                         {members
                           .filter((m) => m.residentId === selectedResident)
-                          .map((m, idx) => (
+                          .map((m) => (
                             <TableRow key={m.id}>
-                              <TableCell className="font-medium">
-                                <span className="flex items-center gap-1.5">
-                                  {idx === 0 && <Crown className="h-4 w-4 text-amber-500" />}
-                                  {m.name}
-                                </span>
+                              <TableCell>
+                                <button
+                                  onClick={() => setAdminMember(m.id)}
+                                  title={m.isAdmin ? "Administrador" : "Tornar administrador"}
+                                  className="transition-colors"
+                                >
+                                  <Crown className={`h-4 w-4 ${m.isAdmin ? "text-amber-500" : "text-muted-foreground/30 hover:text-amber-300"}`} />
+                                </button>
                               </TableCell>
+                              <TableCell className="font-medium">{m.name}</TableCell>
+                              <TableCell className="text-muted-foreground">{m.relation}</TableCell>
                               <TableCell className="text-muted-foreground">{m.email}</TableCell>
                               <TableCell>
-                                {idx !== 0 && (
-                                  <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                )}
+                                <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
                               </TableCell>
                             </TableRow>
                           ))}
