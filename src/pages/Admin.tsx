@@ -72,12 +72,24 @@ export default function Admin() {
       residentId: selectedResident,
       name: newMemberName,
       email: newMemberEmail,
+      relation: newMemberRelation,
       sharePercent: 100,
     };
     setMembers((prev) => [...prev, fm]);
     setNewMemberEmail("");
     setNewMemberName("");
+    setNewMemberRelation("");
     toast.success("Membro familiar adicionado");
+  };
+
+  const setAdminMember = (memberId: string) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.residentId !== selectedResident) return m;
+        return { ...m, isAdmin: m.id === memberId };
+      })
+    );
+    toast.success("Administrador alterado");
   };
 
   const removeMember = (id: string) => {
