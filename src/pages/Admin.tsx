@@ -353,21 +353,15 @@ export default function Admin() {
                         <Package className="h-5 w-5 text-muted-foreground" />
                         <div>
                           <p className="font-medium text-foreground">Lista de Produtos</p>
-                          <p className="text-xs text-muted-foreground">Status do recebimento dos produtos</p>
+                          <p className="text-xs text-muted-foreground">Status da confirmação da lista de produtos</p>
                         </div>
                       </div>
-                      <Select
-                        value={getOrderStatus(selectedResident).products}
-                        onValueChange={(v) => updateOrderStatus(selectedResident, "products", v)}
-                      >
-                        <SelectTrigger className="w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Pendente">Pendente</SelectItem>
-                          <SelectItem value="Recebido">Recebido</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Badge className={getOrderStatus(selectedResident).products === "Recebido"
+                        ? "bg-green-600 text-white hover:bg-green-600"
+                        : "bg-red-500 text-white hover:bg-red-500"
+                      }>
+                        {getOrderStatus(selectedResident).products}
+                      </Badge>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border p-4">
                       <div className="flex items-center gap-3">
@@ -377,18 +371,12 @@ export default function Admin() {
                           <p className="text-xs text-muted-foreground">Status do pagamento pela família</p>
                         </div>
                       </div>
-                      <Select
-                        value={getOrderStatus(selectedResident).payment}
-                        onValueChange={(v) => updateOrderStatus(selectedResident, "payment", v)}
-                      >
-                        <SelectTrigger className="w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Pendente">Pendente</SelectItem>
-                          <SelectItem value="Recebido">Recebido</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Badge className={getOrderStatus(selectedResident).payment === "Recebido"
+                        ? "bg-green-600 text-white hover:bg-green-600"
+                        : "bg-red-500 text-white hover:bg-red-500"
+                      }>
+                        {getOrderStatus(selectedResident).payment}
+                      </Badge>
                     </div>
                   </div>
                 ) : (
