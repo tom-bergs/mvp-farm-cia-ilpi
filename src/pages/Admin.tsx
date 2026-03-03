@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope } from "lucide-react";
+import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard } from "lucide-react";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Admin() {
   const [residents, setResidents] = useState<Resident[]>(initialResidents);
@@ -15,13 +16,31 @@ export default function Admin() {
   const [professionals, setProfessionals] = useState<HealthProfessional[]>(initialProfessionals);
   const [newName, setNewName] = useState("");
   const [newRoom, setNewRoom] = useState("");
-  const [newEmail, setNewEmail] = useState("");
   const [newMemberName, setNewMemberName] = useState("");
-  const [newMemberPercent, setNewMemberPercent] = useState("");
+  const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newProfName, setNewProfName] = useState("");
   const [newProfEmail, setNewProfEmail] = useState("");
   const [newProfRole, setNewProfRole] = useState("");
   const [selectedResident, setSelectedResident] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [orderStatuses, setOrderStatuses] = useState<Record<string, { products: string; payment: string }>>({});
+
+  const filteredResidents = residents.filter((r) => {
+    const q = searchQuery.toLowerCase();
+    return r.name.toLowerCase().includes(q) || r.room.toLowerCase().includes(q);
+  });
+
+  const getOrderStatus = (residentId: string) => {
+    return orderStatuses[residentId] || { products: "Pendente", payment: "Pendente" };
+  };
+
+  const updateOrderStatus = (residentId: string, field: "products" | "payment", value: string) => {
+    setOrderStatuses((prev) => ({
+      ...prev,
+      [residentId]: { ...getOrderStatus(residentId), [field]: value },
+    }));
+    toast.success("Status atualizado");
+  };
 
   const addResident = () => {
     if (!newName.trim() || !newRoom.trim()) {
@@ -35,23 +54,29 @@ export default function Admin() {
     toast.success("Residente cadastrado");
   };
 
+  const removeResident = (id: string) => {
+    setResidents((prev) => prev.filter((r) => r.id !== id));
+    setMembers((prev) => prev.filter((m) => m.residentId !== id));
+    setProfessionals((prev) => prev.filter((p) => p.residentId !== id));
+    if (selectedResident === id) setSelectedResident(null);
+    toast.success("Residente removido");
+  };
+
   const addFamilyMember = () => {
-    if (!selectedResident || !newEmail.trim() || !newMemberName.trim()) {
+    if (!selectedResident || !newMemberEmail.trim() || !newMemberName.trim()) {
       toast.error("Preencha todos os campos");
       return;
     }
-    const percent = Number(newMemberPercent) || 100;
     const fm: FamilyMember = {
       id: `f${Date.now()}`,
       residentId: selectedResident,
       name: newMemberName,
-      email: newEmail,
-      sharePercent: percent,
+      email: newMemberEmail,
+      sharePercent: 100,
     };
     setMembers((prev) => [...prev, fm]);
-    setNewEmail("");
+    setNewMemberEmail("");
     setNewMemberName("");
-    setNewMemberPercent("");
     toast.success("Membro familiar adicionado");
   };
 
@@ -89,7 +114,18 @@ export default function Admin() {
       <div className="mx-auto max-w-5xl space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Administração</h1>
-          <p className="text-muted-foreground">Gerencie residentes e contatos familiares</p>
+          <p className="text-muted-foreground">Gerencie residentes e contatos</p>
+        </div>
+
+        {/* Search bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Buscar residente por nome ou quarto..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -109,7 +145,7 @@ export default function Admin() {
                 </Button>
               </div>
               <div className="space-y-2">
-                {residents.map((r) => (
+                {filteredResidents.map((r) => (
                   <div
                     key={r.id}
                     onClick={() => setSelectedResident(r.id)}
@@ -123,11 +159,29 @@ export default function Admin() {
                       <p className="font-medium text-foreground">{r.name}</p>
                       <p className="text-xs text-muted-foreground">Quarto {r.room}</p>
                     </div>
-                    <Badge variant="outline">
-                      {members.filter((m) => m.residentId === r.id).length} contato(s)
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">
+                        {members.filter((m) => m.residentId === r.id).length} contato(s)
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeResident(r.id);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
+                {filteredResidents.length === 0 && (
+                  <p className="text-center text-sm text-muted-foreground py-4">
+                    Nenhum residente encontrado
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -151,8 +205,7 @@ export default function Admin() {
                     <div className="space-y-2">
                       <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} />
                       <div className="flex gap-2">
-                        <Input placeholder="E-mail" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="flex-1" />
-                        <Input placeholder="%" value={newMemberPercent} onChange={(e) => setNewMemberPercent(e.target.value)} className="w-20" type="number" />
+                        <Input placeholder="E-mail" value={newMemberEmail} onChange={(e) => setNewMemberEmail(e.target.value)} className="flex-1" />
                         <Button onClick={addFamilyMember} size="icon">
                           <UserPlus className="h-4 w-4" />
                         </Button>
@@ -163,24 +216,27 @@ export default function Admin() {
                         <TableRow>
                           <TableHead>Nome</TableHead>
                           <TableHead>E-mail</TableHead>
-                          <TableHead className="text-center">%</TableHead>
                           <TableHead className="w-10"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {members
                           .filter((m) => m.residentId === selectedResident)
-                          .map((m) => (
+                          .map((m, idx) => (
                             <TableRow key={m.id}>
-                              <TableCell className="font-medium">{m.name}</TableCell>
-                              <TableCell className="text-muted-foreground">{m.email}</TableCell>
-                              <TableCell className="text-center">
-                                <Badge variant="outline">{m.sharePercent}%</Badge>
+                              <TableCell className="font-medium">
+                                <span className="flex items-center gap-1.5">
+                                  {idx === 0 && <Crown className="h-4 w-4 text-amber-500" />}
+                                  {m.name}
+                                </span>
                               </TableCell>
+                              <TableCell className="text-muted-foreground">{m.email}</TableCell>
                               <TableCell>
-                                <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
+                                {idx !== 0 && (
+                                  <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                )}
                               </TableCell>
                             </TableRow>
                           ))}
@@ -252,6 +308,72 @@ export default function Admin() {
                 ) : (
                   <p className="text-center text-muted-foreground py-8">
                     Selecione um residente para gerenciar profissionais
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Order Status */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-primary" /> Status do Pedido
+                  {selectedResident && (
+                    <Badge className="ml-2">
+                      {residents.find((r) => r.id === selectedResident)?.name}
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {selectedResident ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between rounded-lg border p-4">
+                      <div className="flex items-center gap-3">
+                        <Package className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="font-medium text-foreground">Lista de Produtos</p>
+                          <p className="text-xs text-muted-foreground">Status do recebimento dos produtos</p>
+                        </div>
+                      </div>
+                      <Select
+                        value={getOrderStatus(selectedResident).products}
+                        onValueChange={(v) => updateOrderStatus(selectedResident, "products", v)}
+                      >
+                        <SelectTrigger className="w-36">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Pendente">Pendente</SelectItem>
+                          <SelectItem value="Recebido">Recebido</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg border p-4">
+                      <div className="flex items-center gap-3">
+                        <CreditCard className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="font-medium text-foreground">Status de Pagamento</p>
+                          <p className="text-xs text-muted-foreground">Status do pagamento pela família</p>
+                        </div>
+                      </div>
+                      <Select
+                        value={getOrderStatus(selectedResident).payment}
+                        onValueChange={(v) => updateOrderStatus(selectedResident, "payment", v)}
+                      >
+                        <SelectTrigger className="w-36">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Pendente">Pendente</SelectItem>
+                          <SelectItem value="Recebido">Recebido</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-center text-muted-foreground py-8">
+                    Selecione um residente para ver o status
                   </p>
                 )}
               </CardContent>
