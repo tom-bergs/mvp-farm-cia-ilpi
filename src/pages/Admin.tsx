@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard } from "lucide-react";
+import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard, CircleDot } from "lucide-react";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Admin() {
   const [residents, setResidents] = useState<Resident[]>(initialResidents);
@@ -18,6 +17,7 @@ export default function Admin() {
   const [newRoom, setNewRoom] = useState("");
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
+  const [newMemberRelation, setNewMemberRelation] = useState("");
   const [newProfName, setNewProfName] = useState("");
   const [newProfEmail, setNewProfEmail] = useState("");
   const [newProfRole, setNewProfRole] = useState("");
@@ -34,13 +34,8 @@ export default function Admin() {
     return orderStatuses[residentId] || { products: "Pendente", payment: "Pendente" };
   };
 
-  const updateOrderStatus = (residentId: string, field: "products" | "payment", value: string) => {
-    setOrderStatuses((prev) => ({
-      ...prev,
-      [residentId]: { ...getOrderStatus(residentId), [field]: value },
-    }));
-    toast.success("Status atualizado");
-  };
+
+
 
   const addResident = () => {
     if (!newName.trim() || !newRoom.trim()) {
@@ -72,12 +67,24 @@ export default function Admin() {
       residentId: selectedResident,
       name: newMemberName,
       email: newMemberEmail,
+      relation: newMemberRelation,
       sharePercent: 100,
     };
     setMembers((prev) => [...prev, fm]);
     setNewMemberEmail("");
     setNewMemberName("");
+    setNewMemberRelation("");
     toast.success("Membro familiar adicionado");
+  };
+
+  const setAdminMember = (memberId: string) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.residentId !== selectedResident) return m;
+        return { ...m, isAdmin: m.id === memberId };
+      })
+    );
+    toast.success("Administrador alterado");
   };
 
   const removeMember = (id: string) => {
@@ -203,7 +210,10 @@ export default function Admin() {
                 {selectedResident ? (
                   <>
                     <div className="space-y-2">
-                      <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} />
+                      <div className="flex gap-2">
+                        <Input placeholder="Nome do familiar" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="flex-1" />
+                        <Input placeholder="Relação" value={newMemberRelation} onChange={(e) => setNewMemberRelation(e.target.value)} className="w-28" />
+                      </div>
                       <div className="flex gap-2">
                         <Input placeholder="E-mail" value={newMemberEmail} onChange={(e) => setNewMemberEmail(e.target.value)} className="flex-1" />
                         <Button onClick={addFamilyMember} size="icon">
@@ -214,7 +224,9 @@ export default function Admin() {
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead></TableHead>
                           <TableHead>Nome</TableHead>
+                          <TableHead>Relação</TableHead>
                           <TableHead>E-mail</TableHead>
                           <TableHead className="w-10"></TableHead>
                         </TableRow>
@@ -222,21 +234,24 @@ export default function Admin() {
                       <TableBody>
                         {members
                           .filter((m) => m.residentId === selectedResident)
-                          .map((m, idx) => (
+                          .map((m) => (
                             <TableRow key={m.id}>
-                              <TableCell className="font-medium">
-                                <span className="flex items-center gap-1.5">
-                                  {idx === 0 && <Crown className="h-4 w-4 text-amber-500" />}
-                                  {m.name}
-                                </span>
+                              <TableCell>
+                                <button
+                                  onClick={() => setAdminMember(m.id)}
+                                  title={m.isAdmin ? "Administrador" : "Tornar administrador"}
+                                  className="transition-colors"
+                                >
+                                  <Crown className={`h-4 w-4 ${m.isAdmin ? "text-amber-500" : "text-muted-foreground/30 hover:text-amber-300"}`} />
+                                </button>
                               </TableCell>
+                              <TableCell className="font-medium">{m.name}</TableCell>
+                              <TableCell className="text-muted-foreground">{m.relation}</TableCell>
                               <TableCell className="text-muted-foreground">{m.email}</TableCell>
                               <TableCell>
-                                {idx !== 0 && (
-                                  <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                )}
+                                <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -333,21 +348,15 @@ export default function Admin() {
                         <Package className="h-5 w-5 text-muted-foreground" />
                         <div>
                           <p className="font-medium text-foreground">Lista de Produtos</p>
-                          <p className="text-xs text-muted-foreground">Status do recebimento dos produtos</p>
+                          <p className="text-xs text-muted-foreground">Status da confirmação da lista de produtos</p>
                         </div>
                       </div>
-                      <Select
-                        value={getOrderStatus(selectedResident).products}
-                        onValueChange={(v) => updateOrderStatus(selectedResident, "products", v)}
-                      >
-                        <SelectTrigger className="w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Pendente">Pendente</SelectItem>
-                          <SelectItem value="Recebido">Recebido</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Badge className={getOrderStatus(selectedResident).products === "Recebido"
+                        ? "bg-green-600 text-white hover:bg-green-600"
+                        : "bg-red-500 text-white hover:bg-red-500"
+                      }>
+                        {getOrderStatus(selectedResident).products}
+                      </Badge>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border p-4">
                       <div className="flex items-center gap-3">
@@ -357,18 +366,12 @@ export default function Admin() {
                           <p className="text-xs text-muted-foreground">Status do pagamento pela família</p>
                         </div>
                       </div>
-                      <Select
-                        value={getOrderStatus(selectedResident).payment}
-                        onValueChange={(v) => updateOrderStatus(selectedResident, "payment", v)}
-                      >
-                        <SelectTrigger className="w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Pendente">Pendente</SelectItem>
-                          <SelectItem value="Recebido">Recebido</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Badge className={getOrderStatus(selectedResident).payment === "Recebido"
+                        ? "bg-green-600 text-white hover:bg-green-600"
+                        : "bg-red-500 text-white hover:bg-red-500"
+                      }>
+                        {getOrderStatus(selectedResident).payment}
+                      </Badge>
                     </div>
                   </div>
                 ) : (

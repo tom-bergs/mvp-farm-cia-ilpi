@@ -47,6 +47,7 @@ export default function Familia() {
       residentId: selectedResident,
       name: newMemberName,
       email: newMemberEmail,
+      relation: "",
       sharePercent: percent,
     };
     setMembers((prev) => [...prev, fm]);
