@@ -240,10 +240,14 @@ export default function Familia() {
                     {totalPercent}%
                   </Badge>
                 </div>
-                {totalPercent > 100 && (
+                {totalPercent !== 100 && (
                   <div className="flex items-center gap-2 rounded-md bg-destructive/10 border border-destructive/30 px-3 py-2 text-destructive">
                     <AlertTriangle className="h-4 w-4 shrink-0" />
-                    <span className="text-xs font-medium">A soma dos percentuais ultrapassa 100%</span>
+                    <span className="text-xs font-medium">
+                      {totalPercent > 100
+                        ? "A soma dos percentuais ultrapassa 100%"
+                        : `A soma dos percentuais está em ${totalPercent}%. Distribua os 100% entre os membros.`}
+                    </span>
                   </div>
                 )}
 
