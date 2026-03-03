@@ -88,7 +88,14 @@ export default function Familia() {
   const commitPercent = (id: string) => {
     const val = Number(editingPercent[id]);
     if (!isNaN(val) && val >= 0 && val <= 100) {
-      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, sharePercent: val } : m)));
+      const otherTotal = residentMembers
+        .filter((m) => m.id !== id)
+        .reduce((sum, m) => sum + m.sharePercent, 0);
+      if (otherTotal + val > 100) {
+        toast.error("A soma dos percentuais não pode ultrapassar 100%");
+      } else {
+        setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, sharePercent: val } : m)));
+      }
     }
     setEditingPercent((prev) => {
       const next = { ...prev };
