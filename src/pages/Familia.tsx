@@ -235,7 +235,7 @@ export default function Familia() {
                   <span className="text-sm font-medium text-muted-foreground">Total alocado:</span>
                   <Badge
                     variant="outline"
-                    className={totalPercent > 100 ? "border-destructive text-destructive" : totalPercent === 100 ? "border-green-600 text-green-600" : ""}
+                    className={totalPercent !== 100 ? "border-destructive text-destructive" : "border-green-600 text-green-600"}
                   >
                     {totalPercent}%
                   </Badge>
