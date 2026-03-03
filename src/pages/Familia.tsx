@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CreditCard, QrCode, CheckCircle2, Users, UserPlus, Trash2, Crown } from "lucide-react";
+import { CreditCard, QrCode, CheckCircle2, Users, UserPlus, Trash2, Crown, CalendarClock, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Familia() {
