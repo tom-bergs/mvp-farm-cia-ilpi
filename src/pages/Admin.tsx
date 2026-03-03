@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard } from "lucide-react";
+import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard, CircleDot } from "lucide-react";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Admin() {
   const [residents, setResidents] = useState<Resident[]>(initialResidents);
