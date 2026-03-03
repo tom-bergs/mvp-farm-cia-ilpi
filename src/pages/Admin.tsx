@@ -34,13 +34,8 @@ export default function Admin() {
     return orderStatuses[residentId] || { products: "Pendente", payment: "Pendente" };
   };
 
-  const updateOrderStatus = (residentId: string, field: "products" | "payment", value: string) => {
-    setOrderStatuses((prev) => ({
-      ...prev,
-      [residentId]: { ...getOrderStatus(residentId), [field]: value },
-    }));
-    toast.success("Status atualizado");
-  };
+
+
 
   const addResident = () => {
     if (!newName.trim() || !newRoom.trim()) {
