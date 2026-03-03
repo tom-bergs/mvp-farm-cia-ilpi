@@ -63,11 +63,11 @@ export const prescriptionItems: PrescriptionItem[] = [
 ];
 
 export const familyMembers: FamilyMember[] = [
-  { id: "f1", residentId: "r1", name: "Juliana Silva", email: "filha.maria@email.com", sharePercent: 100 },
-  { id: "f2", residentId: "r2", name: "Pedro Santos", email: "filho.joao@email.com", sharePercent: 60 },
-  { id: "f3", residentId: "r2", name: "Camila Santos", email: "neta.joao@email.com", sharePercent: 40 },
-  { id: "f4", residentId: "r3", name: "Fernanda Oliveira", email: "sobrinha.ana@email.com", sharePercent: 100 },
-  { id: "f5", residentId: "r4", name: "Roberto Pereira", email: "filho.carlos@email.com", sharePercent: 100 },
+  { id: "f1", residentId: "r1", name: "Juliana Silva", email: "filha.maria@email.com", relation: "Filha", sharePercent: 100, isAdmin: true },
+  { id: "f2", residentId: "r2", name: "Pedro Santos", email: "filho.joao@email.com", relation: "Filho", sharePercent: 60, isAdmin: true },
+  { id: "f3", residentId: "r2", name: "Camila Santos", email: "neta.joao@email.com", relation: "Neta", sharePercent: 40 },
+  { id: "f4", residentId: "r3", name: "Fernanda Oliveira", email: "sobrinha.ana@email.com", relation: "Sobrinha", sharePercent: 100, isAdmin: true },
+  { id: "f5", residentId: "r4", name: "Roberto Pereira", email: "filho.carlos@email.com", relation: "Filho", sharePercent: 100, isAdmin: true },
 ];
 
 export interface HealthProfessional {
