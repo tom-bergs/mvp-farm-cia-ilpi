@@ -90,21 +90,60 @@ export default function Familia() {
           <p className="text-muted-foreground">Visualize medicamentos e realize pagamentos</p>
         </div>
 
-        {/* Resident selector */}
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium">Residente:</span>
-          <Select value={selectedResident} onValueChange={setSelectedResident}>
-            <SelectTrigger className="w-64">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {residents.map((r) => (
-                <SelectItem key={r.id} value={r.id}>
-                  {r.name} — Quarto {r.room}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Header row: resident selector + step-by-step */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-stretch gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium">Residente:</span>
+            <Select value={selectedResident} onValueChange={setSelectedResident}>
+              <SelectTrigger className="w-64">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {residents.map((r) => (
+                  <SelectItem key={r.id} value={r.id}>
+                    {r.name} — Quarto {r.room}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Card className="flex-1 lg:ml-auto lg:max-w-sm w-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <CalendarClock className="h-4 w-4 text-primary" /> Passo-a-passo do Pedido
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Data de hoje:</span>
+                <span className="font-medium text-foreground">{today.toLocaleDateString("pt-BR")}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Fechamento:</span>
+                <span className="font-medium text-foreground">{closingDate.toLocaleDateString("pt-BR")}</span>
+              </div>
+              {daysLeft > 0 ? (
+                <div className="flex items-center gap-2 rounded-md bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-amber-700 dark:text-amber-400">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span className="text-xs font-medium">Faltam {daysLeft} dia(s) para o limite da confirmação do seu pagamento</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 rounded-md bg-destructive/10 border border-destructive/30 px-3 py-2 text-destructive">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span className="text-xs font-medium">Prazo de confirmação encerrado</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-muted-foreground">Status:</span>
+                {isPaid ? (
+                  <Badge className="bg-green-600 text-white hover:bg-green-600">Pago</Badge>
+                ) : (
+                  <Badge className="bg-red-500 text-white hover:bg-red-500">Pendente</Badge>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
