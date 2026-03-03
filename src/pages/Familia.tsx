@@ -27,6 +27,8 @@ export default function Familia() {
   // First member is admin
   const adminMember = residentMembers[0];
 
+  const totalPercent = residentMembers.reduce((sum, m) => sum + m.sharePercent, 0);
+
   const totalValue = residentItems.reduce((sum, item) => {
     const med = medications.find((m) => m.id === item.medicationId);
     return sum + (med ? med.unitPrice * item.quantity : 0);
@@ -51,6 +53,10 @@ export default function Familia() {
       return;
     }
     const percent = Number(newMemberPercent) || 0;
+    if (totalPercent + percent > 100) {
+      toast.error("A soma dos percentuais não pode ultrapassar 100%");
+      return;
+    }
     const fm: FamilyMember = {
       id: `f${Date.now()}`,
       residentId: selectedResident,
@@ -82,7 +88,14 @@ export default function Familia() {
   const commitPercent = (id: string) => {
     const val = Number(editingPercent[id]);
     if (!isNaN(val) && val >= 0 && val <= 100) {
-      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, sharePercent: val } : m)));
+      const otherTotal = residentMembers
+        .filter((m) => m.id !== id)
+        .reduce((sum, m) => sum + m.sharePercent, 0);
+      if (otherTotal + val > 100) {
+        toast.error("A soma dos percentuais não pode ultrapassar 100%");
+      } else {
+        setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, sharePercent: val } : m)));
+      }
     }
     setEditingPercent((prev) => {
       const next = { ...prev };
@@ -216,6 +229,23 @@ export default function Familia() {
                     </div>
                   );
                 })}
+
+                {/* Total percent */}
+                <div className="flex items-center justify-between border-t border-border pt-3 px-1">
+                  <span className="text-sm font-medium text-muted-foreground">Total alocado:</span>
+                  <Badge
+                    variant="outline"
+                    className={totalPercent > 100 ? "border-destructive text-destructive" : totalPercent === 100 ? "border-green-600 text-green-600" : ""}
+                  >
+                    {totalPercent}%
+                  </Badge>
+                </div>
+                {totalPercent > 100 && (
+                  <div className="flex items-center gap-2 rounded-md bg-destructive/10 border border-destructive/30 px-3 py-2 text-destructive">
+                    <AlertTriangle className="h-4 w-4 shrink-0" />
+                    <span className="text-xs font-medium">A soma dos percentuais ultrapassa 100%</span>
+                  </div>
+                )}
 
                 {/* Add member form */}
                 <div className="space-y-2 border-t border-border pt-3">
