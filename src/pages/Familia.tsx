@@ -31,6 +31,13 @@ export default function Familia() {
     return sum + (med ? med.unitPrice * item.quantity : 0);
   }, 0);
 
+  // Order step-by-step
+  const today = new Date();
+  const closingDate = new Date(today.getFullYear(), today.getMonth(), 25);
+  if (today.getDate() > 25) closingDate.setMonth(closingDate.getMonth() + 1);
+  const daysLeft = Math.ceil((closingDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const isPaid = paymentMethod === null && false; // default not paid
+
   const handlePayment = () => {
     toast.success(`Pagamento via ${paymentMethod === "pix" ? "Pix" : "Cartão"} processado!`);
     setPaymentMethod(null);
