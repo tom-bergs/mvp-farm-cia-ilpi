@@ -255,7 +255,20 @@ export default function Admin() {
                                   <Crown className={`h-4 w-4 ${m.isAdmin ? "text-amber-500" : "text-muted-foreground/30 hover:text-amber-300"}`} />
                                 </button>
                               </TableCell>
-                              <TableCell className="font-medium">{m.name}</TableCell>
+                              <TableCell className="font-medium">
+                                <div className="flex items-center gap-2">
+                                  {m.name}
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 text-muted-foreground hover:text-primary"
+                                    title="Reenviar convite por e-mail"
+                                    onClick={() => toast.info(`Convite reenviado para ${m.email}`)}
+                                  >
+                                    <Mail className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </TableCell>
                               <TableCell className="text-muted-foreground">{m.relation}</TableCell>
                               <TableCell className="text-muted-foreground">{m.email}</TableCell>
                               <TableCell>
