@@ -17,6 +17,7 @@ export default function Profissionais() {
   const [newMedId, setNewMedId] = useState("");
   const [prescriptionSent, setPrescriptionSent] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [closedLists, setClosedLists] = useState<Record<string, boolean>>({});
 
   // Simulated logged-in professional
   const currentProfessional = healthProfessionals[0];
@@ -28,6 +29,7 @@ export default function Profissionais() {
 
   const residentItems = items.filter((i) => i.residentId === selectedResident);
   const resident = residents.find((r) => r.id === selectedResident)!;
+  const isListClosed = !!closedLists[selectedResident];
 
   // Closing date: day 20 of current month
   const today = new Date();
@@ -226,7 +228,14 @@ export default function Profissionais() {
             </div>
 
             <div className="flex justify-end">
-              <Button size="lg" onClick={() => toast.success("Lista salva com sucesso!")}>
+              <Button
+                size="lg"
+                disabled={isListClosed}
+                onClick={() => {
+                  setClosedLists((prev) => ({ ...prev, [selectedResident]: true }));
+                  toast.success("Lista fechada com sucesso!");
+                }}
+              >
                 Salvar Lista do Mês
               </Button>
             </div>
@@ -262,7 +271,11 @@ export default function Profissionais() {
                 )}
                 <div className="flex justify-between items-center pt-1">
                   <span className="text-muted-foreground">Status:</span>
-                  <Badge variant="outline">{residentItems.length} produto(s)</Badge>
+                  {isListClosed ? (
+                    <Badge variant="default">Lista Fechada</Badge>
+                  ) : (
+                    <Badge variant="secondary">Pendente</Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>
