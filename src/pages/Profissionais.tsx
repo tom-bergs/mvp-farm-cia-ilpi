@@ -29,6 +29,7 @@ export default function Profissionais() {
 
   const residentItems = items.filter((i) => i.residentId === selectedResident);
   const resident = residents.find((r) => r.id === selectedResident)!;
+  const isListClosed = !!closedLists[selectedResident];
 
   // Closing date: day 20 of current month
   const today = new Date();
