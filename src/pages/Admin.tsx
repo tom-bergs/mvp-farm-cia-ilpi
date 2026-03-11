@@ -25,6 +25,16 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState("");
   const [orderStatuses, setOrderStatuses] = useState<Record<string, { products: string; payment: string }>>({});
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedResident(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const filteredResidents = residents.filter((r) => {
     const q = searchQuery.toLowerCase();
     return r.name.toLowerCase().includes(q) || r.room.toLowerCase().includes(q);
