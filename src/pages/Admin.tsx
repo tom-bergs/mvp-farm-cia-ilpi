@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { residents as initialResidents, familyMembers as initialMembers, healthProfessionals as initialProfessionals, type Resident, type FamilyMember, type HealthProfessional } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,16 @@ export default function Admin() {
   const [selectedResident, setSelectedResident] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [orderStatuses, setOrderStatuses] = useState<Record<string, { products: string; payment: string }>>({});
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedResident(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const filteredResidents = residents.filter((r) => {
     const q = searchQuery.toLowerCase();
