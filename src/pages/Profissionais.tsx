@@ -271,7 +271,11 @@ export default function Profissionais() {
                 )}
                 <div className="flex justify-between items-center pt-1">
                   <span className="text-muted-foreground">Status:</span>
-                  <Badge variant="outline">{residentItems.length} produto(s)</Badge>
+                  {isListClosed ? (
+                    <Badge variant="default">Lista Fechada</Badge>
+                  ) : (
+                    <Badge variant="secondary">Pendente</Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>
