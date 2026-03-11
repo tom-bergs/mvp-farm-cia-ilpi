@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { residents as initialResidents, familyMembers as initialMembers, healthProfessionals as initialProfessionals, type Resident, type FamilyMember, type HealthProfessional } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
