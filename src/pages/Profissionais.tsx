@@ -227,7 +227,14 @@ export default function Profissionais() {
             </div>
 
             <div className="flex justify-end">
-              <Button size="lg" onClick={() => toast.success("Lista salva com sucesso!")}>
+              <Button
+                size="lg"
+                disabled={isListClosed}
+                onClick={() => {
+                  setClosedLists((prev) => ({ ...prev, [selectedResident]: true }));
+                  toast.success("Lista fechada com sucesso!");
+                }}
+              >
                 Salvar Lista do Mês
               </Button>
             </div>
