@@ -74,6 +74,17 @@ export default function Profissionais() {
     toast.success("Receitas digitais enviadas com sucesso!");
   };
 
+  const handleRequestProduct = () => {
+    if (!requestProductName.trim()) {
+      toast.error("Informe o nome do produto");
+      return;
+    }
+    toast.success(`Solicitação enviada: "${requestProductName}"`);
+    setRequestProductName("");
+    setRequestProductNotes("");
+    setRequestDialogOpen(false);
+  };
+
   // Get professional name for an item (simulated: current professional for all)
   const getProfessionalForItem = (_itemId: string) => {
     return currentProfessional?.name || "—";
