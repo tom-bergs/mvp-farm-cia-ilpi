@@ -156,10 +156,44 @@ export default function Profissionais() {
               <Button onClick={addMedication} disabled={!newMedId}>
                 <Plus className="mr-1 h-4 w-4" /> Adicionar
               </Button>
-            </div>
-
-            {/* Products table */}
-            <div className="rounded-xl border border-border bg-card overflow-hidden">
+              <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" title="Solicitar produto não listado">
+                    <MessageSquarePlus className="mr-1 h-4 w-4" /> Solicitar Produto
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Solicitar Produto Não Listado</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Nome do Produto *</label>
+                      <Input
+                        placeholder="Ex: Insulina Glargina 100UI/ml"
+                        value={requestProductName}
+                        onChange={(e) => setRequestProductName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Observações</label>
+                      <Textarea
+                        placeholder="Dosagem, motivo da solicitação, urgência..."
+                        value={requestProductNotes}
+                        onChange={(e) => setRequestProductNotes(e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Residente: <span className="font-medium">{resident.name}</span> — Solicitante: <span className="font-medium">{currentProfessional?.name}</span>
+                    </p>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setRequestDialogOpen(false)}>Cancelar</Button>
+                    <Button onClick={handleRequestProduct}>Enviar Solicitação</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
               <Table>
                 <TableHeader>
                   <TableRow className="bg-secondary/50">
