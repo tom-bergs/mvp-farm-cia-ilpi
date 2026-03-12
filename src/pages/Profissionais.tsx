@@ -8,7 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, AlertTriangle, Pill, Upload, CalendarClock, Search } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus, Trash2, AlertTriangle, Pill, Upload, CalendarClock, Search, MessageSquarePlus } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Profissionais() {
@@ -18,6 +20,9 @@ export default function Profissionais() {
   const [prescriptionSent, setPrescriptionSent] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [closedLists, setClosedLists] = useState<Record<string, boolean>>({});
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [requestProductName, setRequestProductName] = useState("");
+  const [requestProductNotes, setRequestProductNotes] = useState("");
 
   // Simulated logged-in professional
   const currentProfessional = healthProfessionals[0];
@@ -67,6 +72,17 @@ export default function Profissionais() {
 
   const handleUploadPrescriptions = () => {
     toast.success("Receitas digitais enviadas com sucesso!");
+  };
+
+  const handleRequestProduct = () => {
+    if (!requestProductName.trim()) {
+      toast.error("Informe o nome do produto");
+      return;
+    }
+    toast.success(`Solicitação enviada: "${requestProductName}"`);
+    setRequestProductName("");
+    setRequestProductNotes("");
+    setRequestDialogOpen(false);
   };
 
   // Get professional name for an item (simulated: current professional for all)
@@ -140,6 +156,44 @@ export default function Profissionais() {
               <Button onClick={addMedication} disabled={!newMedId}>
                 <Plus className="mr-1 h-4 w-4" /> Adicionar
               </Button>
+              <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" title="Solicitar produto não listado">
+                    <MessageSquarePlus className="mr-1 h-4 w-4" /> Solicitar Produto
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Solicitar Produto Não Listado</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Nome do Produto *</label>
+                      <Input
+                        placeholder="Ex: Insulina Glargina 100UI/ml"
+                        value={requestProductName}
+                        onChange={(e) => setRequestProductName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Observações</label>
+                      <Textarea
+                        placeholder="Dosagem, motivo da solicitação, urgência..."
+                        value={requestProductNotes}
+                        onChange={(e) => setRequestProductNotes(e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Residente: <span className="font-medium">{resident.name}</span> — Solicitante: <span className="font-medium">{currentProfessional?.name}</span>
+                    </p>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setRequestDialogOpen(false)}>Cancelar</Button>
+                    <Button onClick={handleRequestProduct}>Enviar Solicitação</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
 
             {/* Products table */}
