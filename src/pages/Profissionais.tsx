@@ -20,6 +20,9 @@ export default function Profissionais() {
   const [prescriptionSent, setPrescriptionSent] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [closedLists, setClosedLists] = useState<Record<string, boolean>>({});
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [requestProductName, setRequestProductName] = useState("");
+  const [requestProductNotes, setRequestProductNotes] = useState("");
 
   // Simulated logged-in professional
   const currentProfessional = healthProfessionals[0];
