@@ -194,6 +194,10 @@ export default function Profissionais() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+            </div>
+
+            {/* Products table */}
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-secondary/50">
