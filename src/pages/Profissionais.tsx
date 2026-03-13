@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2, AlertTriangle, Pill, Upload, CalendarClock, Search, MessageSquarePlus } from "lucide-react";
+import { UploadPrescricaoModal } from '@/components/UploadPrescricaoModal';
 import { toast } from "sonner";
 
 export default function Profissionais() {
