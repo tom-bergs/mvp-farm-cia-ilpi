@@ -65,12 +65,14 @@ export default function Familia() {
       name: newMemberName,
       email: newMemberEmail,
       relation: "",
+      phone: formatPhone(newMemberPhone),
       sharePercent: percent,
     };
     setMembers((prev) => [...prev, fm]);
     setNewMemberName("");
     setNewMemberEmail("");
     setNewMemberPercent("");
+    setNewMemberPhone(emptyPhone);
     toast.success("Membro adicionado");
   };
 
