@@ -27,6 +27,7 @@ export interface FamilyMember {
   residentId: string;
   name: string;
   email: string;
+  phone?: string;
   relation: string;
   sharePercent: number;
   isAdmin?: boolean;
