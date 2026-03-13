@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2, AlertTriangle, Pill, Upload, CalendarClock, Search, MessageSquarePlus } from "lucide-react";
+import { UploadPrescricaoModal } from '@/components/UploadPrescricaoModal';
 import { toast } from "sonner";
 
 export default function Profissionais() {
@@ -23,6 +24,7 @@ export default function Profissionais() {
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [requestProductName, setRequestProductName] = useState("");
   const [requestProductNotes, setRequestProductNotes] = useState("");
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   // Simulated logged-in professional
   const currentProfessional = healthProfessionals[0];
@@ -101,6 +103,10 @@ export default function Profissionais() {
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={handleUploadPrescriptions}>
               <Upload className="mr-1 h-4 w-4" /> Enviar Receitas
+            </Button>
+            <Button onClick={() => setUploadModalOpen(true)} variant="outline">
+              <Upload className="mr-2 h-4 w-4" />
+              Subir Prescrição
             </Button>
             <Badge variant="outline" className="text-sm">
               {currentProfessional?.name}
@@ -336,6 +342,7 @@ export default function Profissionais() {
           </div>
         </div>
       </div>
+      <UploadPrescricaoModal open={uploadModalOpen} onClose={() => setUploadModalOpen(false)} />
     </Layout>
   );
 }
