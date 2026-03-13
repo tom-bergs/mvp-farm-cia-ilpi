@@ -81,12 +81,14 @@ export default function Admin() {
       name: newMemberName,
       email: newMemberEmail,
       relation: newMemberRelation,
+      phone: formatPhone(newMemberPhone),
       sharePercent: 100,
     };
     setMembers((prev) => [...prev, fm]);
     setNewMemberEmail("");
     setNewMemberName("");
     setNewMemberRelation("");
+    setNewMemberPhone(emptyPhone);
     toast.success("Membro familiar adicionado");
   };
 
