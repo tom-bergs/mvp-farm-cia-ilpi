@@ -280,6 +280,7 @@ export default function Admin() {
                               </TableCell>
                               <TableCell className="text-muted-foreground">{m.relation}</TableCell>
                               <TableCell className="text-muted-foreground">{m.email}</TableCell>
+                              <TableCell className="text-muted-foreground text-xs">{m.phone || "—"}</TableCell>
                               <TableCell>
                                 <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
                                   <Trash2 className="h-4 w-4" />
