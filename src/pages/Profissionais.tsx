@@ -342,6 +342,7 @@ export default function Profissionais() {
           </div>
         </div>
       </div>
+      <UploadPrescricaoModal open={uploadModalOpen} onClose={() => setUploadModalOpen(false)} />
     </Layout>
   );
 }
