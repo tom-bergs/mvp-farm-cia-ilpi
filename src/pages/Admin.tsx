@@ -118,11 +118,13 @@ export default function Admin() {
       name: newProfName,
       email: newProfEmail,
       role: newProfRole,
+      phone: formatPhone(newProfPhone),
     };
     setProfessionals((prev) => [...prev, hp]);
     setNewProfName("");
     setNewProfEmail("");
     setNewProfRole("");
+    setNewProfPhone(emptyPhone);
     toast.success("Profissional adicionado");
   };
 
