@@ -104,6 +104,10 @@ export default function Profissionais() {
             <Button variant="outline" onClick={handleUploadPrescriptions}>
               <Upload className="mr-1 h-4 w-4" /> Enviar Receitas
             </Button>
+            <Button onClick={() => setUploadModalOpen(true)} variant="outline">
+              <Upload className="mr-2 h-4 w-4" />
+              Subir Prescrição
+            </Button>
             <Badge variant="outline" className="text-sm">
               {currentProfessional?.name}
             </Badge>
