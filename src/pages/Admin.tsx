@@ -19,9 +19,11 @@ export default function Admin() {
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberRelation, setNewMemberRelation] = useState("");
+  const [newMemberPhone, setNewMemberPhone] = useState<PhoneValue>(emptyPhone);
   const [newProfName, setNewProfName] = useState("");
   const [newProfEmail, setNewProfEmail] = useState("");
   const [newProfRole, setNewProfRole] = useState("");
+  const [newProfPhone, setNewProfPhone] = useState<PhoneValue>(emptyPhone);
   const [selectedResident, setSelectedResident] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [orderStatuses, setOrderStatuses] = useState<Record<string, { products: string; payment: string }>>({});
