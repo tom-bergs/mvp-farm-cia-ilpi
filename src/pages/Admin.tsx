@@ -342,6 +342,7 @@ export default function Admin() {
                             <TableRow key={p.id}>
                               <TableCell className="font-medium">{p.name}</TableCell>
                               <TableCell className="text-muted-foreground">{p.email}</TableCell>
+                              <TableCell className="text-muted-foreground text-xs">{p.phone || "—"}</TableCell>
                               <TableCell className="text-center">
                                 <Badge variant="outline">{p.role}</Badge>
                               </TableCell>

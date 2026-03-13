@@ -265,6 +265,7 @@ export default function Familia() {
                       <UserPlus className="h-3.5 w-3.5" />
                     </Button>
                   </div>
+                  <PhoneInput value={newMemberPhone} onChange={setNewMemberPhone} />
                 </div>
               </CardContent>
             </Card>
