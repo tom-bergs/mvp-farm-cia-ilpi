@@ -237,6 +237,7 @@ export default function Admin() {
                           <UserPlus className="h-4 w-4" />
                         </Button>
                       </div>
+                      <PhoneInput value={newMemberPhone} onChange={setNewMemberPhone} />
                     </div>
                     <Table>
                       <TableHeader>
