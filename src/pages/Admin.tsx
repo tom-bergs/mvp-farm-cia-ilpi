@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard, CircleDot } from "lucide-react";
+import { Plus, Trash2, Mail, UserPlus, BedDouble, Stethoscope, Crown, Search, Package, CreditCard, CircleDot, Phone } from "lucide-react";
 import { toast } from "sonner";
+import PhoneInput, { emptyPhone, formatPhone, type PhoneValue } from "@/components/PhoneInput";
 
 export default function Admin() {
   const [residents, setResidents] = useState<Resident[]>(initialResidents);
@@ -18,9 +19,11 @@ export default function Admin() {
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberRelation, setNewMemberRelation] = useState("");
+  const [newMemberPhone, setNewMemberPhone] = useState<PhoneValue>(emptyPhone);
   const [newProfName, setNewProfName] = useState("");
   const [newProfEmail, setNewProfEmail] = useState("");
   const [newProfRole, setNewProfRole] = useState("");
+  const [newProfPhone, setNewProfPhone] = useState<PhoneValue>(emptyPhone);
   const [selectedResident, setSelectedResident] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [orderStatuses, setOrderStatuses] = useState<Record<string, { products: string; payment: string }>>({});
@@ -78,12 +81,14 @@ export default function Admin() {
       name: newMemberName,
       email: newMemberEmail,
       relation: newMemberRelation,
+      phone: formatPhone(newMemberPhone),
       sharePercent: 100,
     };
     setMembers((prev) => [...prev, fm]);
     setNewMemberEmail("");
     setNewMemberName("");
     setNewMemberRelation("");
+    setNewMemberPhone(emptyPhone);
     toast.success("Membro familiar adicionado");
   };
 
@@ -113,11 +118,13 @@ export default function Admin() {
       name: newProfName,
       email: newProfEmail,
       role: newProfRole,
+      phone: formatPhone(newProfPhone),
     };
     setProfessionals((prev) => [...prev, hp]);
     setNewProfName("");
     setNewProfEmail("");
     setNewProfRole("");
+    setNewProfPhone(emptyPhone);
     toast.success("Profissional adicionado");
   };
 
@@ -230,6 +237,7 @@ export default function Admin() {
                           <UserPlus className="h-4 w-4" />
                         </Button>
                       </div>
+                      <PhoneInput value={newMemberPhone} onChange={setNewMemberPhone} />
                     </div>
                     <Table>
                       <TableHeader>
@@ -238,6 +246,7 @@ export default function Admin() {
                           <TableHead>Nome</TableHead>
                           <TableHead>Relação</TableHead>
                           <TableHead>E-mail</TableHead>
+                          <TableHead>Telefone</TableHead>
                           <TableHead className="w-10"></TableHead>
                         </TableRow>
                       </TableHeader>
@@ -271,6 +280,7 @@ export default function Admin() {
                               </TableCell>
                               <TableCell className="text-muted-foreground">{m.relation}</TableCell>
                               <TableCell className="text-muted-foreground">{m.email}</TableCell>
+                              <TableCell className="text-muted-foreground text-xs">{m.phone || "—"}</TableCell>
                               <TableCell>
                                 <Button variant="ghost" size="icon" onClick={() => removeMember(m.id)} className="text-destructive hover:text-destructive">
                                   <Trash2 className="h-4 w-4" />
@@ -313,12 +323,14 @@ export default function Admin() {
                           <UserPlus className="h-4 w-4" />
                         </Button>
                       </div>
+                      <PhoneInput value={newProfPhone} onChange={setNewProfPhone} />
                     </div>
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead>Nome</TableHead>
                           <TableHead>E-mail</TableHead>
+                          <TableHead>Telefone</TableHead>
                           <TableHead className="text-center">Função</TableHead>
                           <TableHead className="w-10"></TableHead>
                         </TableRow>
@@ -330,6 +342,7 @@ export default function Admin() {
                             <TableRow key={p.id}>
                               <TableCell className="font-medium">{p.name}</TableCell>
                               <TableCell className="text-muted-foreground">{p.email}</TableCell>
+                              <TableCell className="text-muted-foreground text-xs">{p.phone || "—"}</TableCell>
                               <TableCell className="text-center">
                                 <Badge variant="outline">{p.role}</Badge>
                               </TableCell>

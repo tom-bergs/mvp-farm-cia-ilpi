@@ -4,6 +4,7 @@ import { residents, medications, prescriptionItems, familyMembers as initialMemb
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PhoneInput, { emptyPhone, formatPhone, type PhoneValue } from "@/components/PhoneInput";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -18,6 +19,7 @@ export default function Familia() {
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberPercent, setNewMemberPercent] = useState("");
+  const [newMemberPhone, setNewMemberPhone] = useState<PhoneValue>(emptyPhone);
   const [editingPercent, setEditingPercent] = useState<Record<string, string>>({});
 
   const resident = residents.find((r) => r.id === selectedResident)!;
@@ -63,12 +65,14 @@ export default function Familia() {
       name: newMemberName,
       email: newMemberEmail,
       relation: "",
+      phone: formatPhone(newMemberPhone),
       sharePercent: percent,
     };
     setMembers((prev) => [...prev, fm]);
     setNewMemberName("");
     setNewMemberEmail("");
     setNewMemberPercent("");
+    setNewMemberPhone(emptyPhone);
     toast.success("Membro adicionado");
   };
 
@@ -261,6 +265,7 @@ export default function Familia() {
                       <UserPlus className="h-3.5 w-3.5" />
                     </Button>
                   </div>
+                  <PhoneInput value={newMemberPhone} onChange={setNewMemberPhone} />
                 </div>
               </CardContent>
             </Card>
