@@ -19,6 +19,7 @@ export default function Familia() {
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberPercent, setNewMemberPercent] = useState("");
+  const [newMemberPhone, setNewMemberPhone] = useState<PhoneValue>(emptyPhone);
   const [editingPercent, setEditingPercent] = useState<Record<string, string>>({});
 
   const resident = residents.find((r) => r.id === selectedResident)!;
