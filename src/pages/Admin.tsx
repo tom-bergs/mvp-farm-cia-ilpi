@@ -330,6 +330,7 @@ export default function Admin() {
                         <TableRow>
                           <TableHead>Nome</TableHead>
                           <TableHead>E-mail</TableHead>
+                          <TableHead>Telefone</TableHead>
                           <TableHead className="text-center">Função</TableHead>
                           <TableHead className="w-10"></TableHead>
                         </TableRow>
