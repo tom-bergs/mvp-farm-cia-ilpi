@@ -24,6 +24,7 @@ export default function Profissionais() {
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [requestProductName, setRequestProductName] = useState("");
   const [requestProductNotes, setRequestProductNotes] = useState("");
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   // Simulated logged-in professional
   const currentProfessional = healthProfessionals[0];
